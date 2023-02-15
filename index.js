@@ -3,7 +3,18 @@ const path = require('path');
 const inquirer = require("inquirer");
 const generateMarkdown = require("./utils/generateMarkdown");
 const { CommandStartedEvent, LEGAL_TCP_SOCKET_OPTIONS } = require("mongodb");
-
+let answers = {
+     title: 'title',
+     sections: 'sections',
+     descript: 'descr.',
+     contents: 'contents',
+     install: 'install',
+     usage: 'usage',
+     licence: 'licence',
+     contrib: 'contrib',
+     test: 'test',
+     question: 'questi:'
+}
 // array of questions for user
 const questions = [
     inquirer
@@ -12,10 +23,6 @@ const questions = [
                name: 'projectTitle',
                message: 'Please enter your project title?',
                type: 'input',
-            },
-            {
-                name: 'projectSections',
-                message: 'Please list the project sections separated by commas:',
             },
             {
                 name: 'description',
@@ -68,29 +75,72 @@ const questions = [
             }
         ])
         .then(function (answer){
-            console.log(answer.projectTitle);
-            console.log(answer.projectSections);
-            console.log(answer.description);
-            console.log(answer.tableOfContents);
-
+            title = answer.projectTitle;
+            descript = answer.descriptions;
+            contents = answer.tableOfContents;
+            contentsArray = contents.split(',');
+            install = answer.installation;
+            usage = answer.usage;
+            licence = answer.licence;
+            contrib = answer.contributors;
+            contribArray = contrib.split(',');
+            test = answer.test;
+            question = answer.questions;
+            writeToFile('READEME.md', answers);
         })
 ];
 
+// function to loop through array
+
+function loopThroughArray(arr) {
+    for (let i = 0; i < arr.length; i++) {
+        let result = arr[i];
+        return result;
+    }
+}
+
 // function to write README file
 function writeToFile(fileName, data) {
-    fs.writeToFile('READEME.md', 
-    `
-    
-    
-    
-    
-    `)
-}
+    data = answers;
+    fs.writeToFile('README.md', 
+    `# ${title}
+    ***
+
+    ## Description
+    ***
+    ${descript}
+
+    ## Table of Contents
+    ***
+    ${loopThroughArray(contentsArray)}
+
+    ## Installation
+    ***
+    ${install}
+
+    ## Usage
+    ***
+    ${usage}
+
+    ## License
+    ***
+    ${licence}
+
+    ## Contributors
+    ***
+    ${loopThroughArray(contrib)}
+
+    ## Tests
+    ***
+    ${test}
+
+    ## Questions 
+    ***
+    ${question}`)
+};
 
 // function to initialize program
 function init() {
-
 }
-
 // function call to initialize program
 init();
