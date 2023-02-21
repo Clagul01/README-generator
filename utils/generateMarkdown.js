@@ -33,9 +33,7 @@ function generateMarkdown(data) {
 
   ## Questions 
   ***
-  ${question}`)
-
-`;
+  ${question}`
 }
 
 module.exports = generateMarkdown;

@@ -1,11 +1,10 @@
-const fs = require("fs");
+const fs = require('fs');
 const path = require('path');
 const inquirer = require("inquirer");
 const generateMarkdown = require("./utils/generateMarkdown");
-const { CommandStartedEvent, LEGAL_TCP_SOCKET_OPTIONS } = require("mongodb");
+
 let answers = {
      title: 'title',
-     sections: 'sections',
      descript: 'descr.',
      contents: 'contents',
      install: 'install',
@@ -13,12 +12,11 @@ let answers = {
      licence: 'licence',
      contrib: 'contrib',
      test: 'test',
-     question: 'questi:'
+     question: 'question'
 }
 // array of questions for user
-const questions = [
-    inquirer
-        .prompt([
+function userInput() {
+    return inquirer.prompt([
             {
                name: 'projectTitle',
                message: 'Please enter your project title?',
@@ -26,11 +24,12 @@ const questions = [
             },
             {
                 name: 'description',
-                message: 'Please write a description for your project:'
+                type: 'input',
+                message: 'Please write a description for your project:',
             },
             {
                 name: 'tableOfContents',
-                message: 'Please enter the items of your contents separated by commas:'
+                message: 'Please enter the items of your contents separated by commas:',
             },
             {
                 name: 'installation',
@@ -70,77 +69,21 @@ const questions = [
                 message: 'Please enter details of project tests: ',
             },
             {
-                name: 'questions',
+                name: 'question',
                 message: 'Please enter any questions relating to your project: '
             }
         ])
-        .then(function (answer){
-            title = answer.projectTitle;
-            descript = answer.descriptions;
-            contents = answer.tableOfContents;
-            contentsArray = contents.split(',');
-            install = answer.installation;
-            usage = answer.usage;
-            licence = answer.licence;
-            contrib = answer.contributors;
-            contribArray = contrib.split(',');
-            test = answer.test;
-            question = answer.questions;
-            writeToFile('READEME.md', answers);
-        })
-];
-
-// function to loop through array
-
-function loopThroughArray(arr) {
-    for (let i = 0; i < arr.length; i++) {
-        let result = arr[i];
-        return result;
-    }
-}
+    };
 
 // function to write README file
 function writeToFile(fileName, data) {
-    data = answers;
-    fs.writeToFile('README.md', 
-    `# ${title}
-    ***
-
-    ## Description
-    ***
-    ${descript}
-
-    ## Table of Contents
-    ***
-    ${loopThroughArray(contentsArray)}
-
-    ## Installation
-    ***
-    ${install}
-
-    ## Usage
-    ***
-    ${usage}
-
-    ## License
-    ***
-    ${licence}
-
-    ## Contributors
-    ***
-    ${loopThroughArray(contrib)}
-
-    ## Tests
-    ***
-    ${test}
-
-    ## Questions 
-    ***
-    ${question}`)
+    let file = generateMarkdown(questions);
+    fs.writeToFile('README.md', file)
 };
 
 // function to initialize program
 function init() {
+    
 }
 // function call to initialize program
 init();
